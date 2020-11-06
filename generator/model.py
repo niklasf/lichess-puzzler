@@ -1,14 +1,14 @@
-from chess.pgn import GameNode
+from chess.pgn import ChildNode
 from chess import Move
 from chess.engine import Score, Mate, Cp
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Literal, Union
 
-Kind = Literal["mate", "material"]  # Literal["mate", "other"]
+Kind = Literal["mate", "material"]
 
 @dataclass
 class Puzzle:
-    node: GameNode
+    node: ChildNode
     moves: List[Move]
     kind: Kind
 
@@ -19,6 +19,6 @@ class EngineMove:
 
 @dataclass
 class NextMovePair:
-    node: GameNode
+    node: ChildNode
     best: EngineMove
     second: Optional[EngineMove]

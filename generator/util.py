@@ -3,7 +3,7 @@ import math
 import chess
 from model import EngineMove, NextMovePair
 from chess import Move, Color, Board
-from chess.pgn import GameNode
+from chess.pgn import ChildNode
 from chess.engine import SimpleEngine, Mate, Cp, Score, PovScore
 from typing import List, Optional, Tuple, Literal, Union
 
@@ -19,7 +19,7 @@ def is_up_in_material(board: Board, side: Color) -> bool:
     return material_diff(board, side) > 0
 
 
-def get_next_move_pair(engine: SimpleEngine, node: GameNode, winner: Color, limit: chess.engine.Limit) -> NextMovePair:
+def get_next_move_pair(engine: SimpleEngine, node: ChildNode, winner: Color, limit: chess.engine.Limit) -> NextMovePair:
     info = engine.analyse(node.board(), multipv = 2, limit = limit)
     # print(info)
     best = EngineMove(info[0]["pv"][0], info[0]["score"].pov(winner))

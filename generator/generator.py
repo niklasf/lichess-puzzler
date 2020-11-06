@@ -14,9 +14,9 @@ from model import Puzzle, Kind, EngineMove, NextMovePair
 from io import StringIO
 from chess import Move, Color, Board
 from chess.engine import SimpleEngine, Mate, Cp, Score, PovScore
-from chess.pgn import Game, GameNode
-from typing import List, Optional, Tuple, Literal, Union
-from util import EngineMove, get_next_move_pair, material_count, material_diff, is_up_in_material, win_chances
+from chess.pgn import Game, ChildNode
+from typing import List, Optional, Tuple, Literal, Union, TextIO
+from util import get_next_move_pair, material_count, material_diff, is_up_in_material, win_chances
 from server import Server
 
 logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ def is_valid_defense(pair: NextMovePair) -> bool:
         return True
     return win_chances(pair.second.score) > win_chances(pair.best.score) + 0.25
 
-def get_next_move(engine: SimpleEngine, node: GameNode, winner: Color) -> Optional[NextMovePair]:
+def get_next_move(engine: SimpleEngine, node: ChildNode, winner: Color) -> Optional[NextMovePair]:
     board = node.board()
     pair = get_next_move_pair(engine, node, winner, get_move_limit)
     logger.debug("{} {} {}".format("attack" if board.turn == winner else "defense", pair.best, pair.second))
@@ -63,7 +63,7 @@ def get_next_move(engine: SimpleEngine, node: GameNode, winner: Color) -> Option
         return None
     return pair
 
-def cook_mate(engine: SimpleEngine, node: GameNode, winner: Color) -> Optional[List[Move]]:
+def cook_mate(engine: SimpleEngine, node: ChildNode, winner: Color) -> Optional[List[Move]]:
 
     if node.board().is_game_over():
         return []
@@ -87,7 +87,7 @@ def cook_mate(engine: SimpleEngine, node: GameNode, winner: Color) -> Optional[L
     return [next.move] + follow_up
 
 
-def cook_advantage(engine: SimpleEngine, node: GameNode, winner: Color) -> Optional[List[NextMovePair]]:
+def cook_advantage(engine: SimpleEngine, node: ChildNode, winner: Color) -> Optional[List[NextMovePair]]:
 
     is_capture = "x" in node.san() # monkaS
     up_in_material = is_up_in_material(node.board(), winner)
@@ -144,7 +144,7 @@ def analyze_game(server: Server, engine: SimpleEngine, game: Game) -> Optional[P
     return None
 
 
-def analyze_position(server: Server, engine: SimpleEngine, node: GameNode, prev_score: Score, current_eval: PovScore) -> Union[Puzzle, Score]:
+def analyze_position(server: Server, engine: SimpleEngine, node: ChildNode, prev_score: Score, current_eval: PovScore) -> Union[Puzzle, Score]:
 
     board = node.board()
     winner = board.turn
@@ -216,7 +216,7 @@ def make_engine(executable: str, threads: int) -> SimpleEngine:
     return engine
 
 
-def open_file(file: str):
+def open_file(file: str) -> TextIO:
     if file.endswith(".bz2"):
         return bz2.open(file, "rt")
     return open(file)
@@ -249,6 +249,8 @@ def main() -> None:
                 skip_next = False
             elif "%eval" in line:
                 game = chess.pgn.read_game(StringIO("{}\n{}".format(site, line)))
+                assert game is not None
+
                 game_id = game.headers.get("Site", "?")[20:]
                 if server.is_seen(game_id):
                     logger.info("Game was already seen before")

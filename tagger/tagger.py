@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 
 def read(doc) -> Puzzle:
     board = Board(doc["fen"])
-    node = Game.from_board(board)
+    node: GameNode = Game.from_board(board)
     for uci in doc["moves"]:
         move = Move.from_uci(uci)
         node = node.add_main_variation(move)

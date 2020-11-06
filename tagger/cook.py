@@ -139,13 +139,13 @@ def attraction(puzzle: Puzzle) -> bool:
             continue
         # 1. player moves to a square
         first_move_to = node.move.to_square
-        opponent_reply = util.next_node(node)
+        opponent_reply = node.next()
         # 2. opponent captures on that square
         if opponent_reply and opponent_reply.move.to_square == first_move_to:
             attracted_piece = util.moved_piece_type(opponent_reply)
             if attracted_piece in [KING, QUEEN, ROOK]:
                 attracted_to_square = opponent_reply.move.to_square
-                next_node = util.next_node(opponent_reply)
+                next_node = opponent_reply.next()
                 if next_node:
                     attackers = next_node.board().attackers(puzzle.pov, attracted_to_square)
                     # 3. player attacks that square

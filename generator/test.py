@@ -80,12 +80,12 @@ class TestGenerator(unittest.TestCase):
                 Cp(-950), "e3e2", Mate(4), "g4h6 g7h6 c3h8 g8h8 e7f7 b8f8 f7f8 f3f2 h4f6")
                 # Cp(-950), "e3e2", Mate(4), "g4h6 g8h8 h6f7 h8g8 c3g7 g8g7 h4f6 g7g8 f7h6")
 
-    def test_puzzle_14(self):
+    def test_puzzle_14(self) -> None:
         self.get_puzzle("5r1k/1Q3p2/5q1p/8/2P4p/1P4P1/P4P2/R4RK1 w - - 0 29",
                 Cp(-1010), "g3h4", Cp(0), "f8g8 b7g2 g8g2")
 
     # https://lichess.org/3GvkmJcw#43
-    def test_puzzle_15(self):
+    def test_puzzle_15(self) -> None:
         self.get_puzzle("7k/pp1q2pp/1n1p2r1/4p3/P3P3/1Q3N1P/1P3PP1/5RK1 w - - 3 22",
                 Cp(-80), "a4a5", Cp(856), "d7h3 g2g3 g6h6 f3h4 h6h4 g3h4 h3b3")
 
@@ -119,19 +119,19 @@ class TestGenerator(unittest.TestCase):
                 Cp(-1020), "g3h4", Cp(0))
 
     # https://lichess.org/N99i0nfU#11
-    def test_not_puzzle_7(self):
+    def test_not_puzzle_7(self) -> None:
         self.not_puzzle("rnb1k1nr/ppp2p1p/3p1qp1/2b1p3/2B1P3/2NP1Q2/PPP2PPP/R1B1K1NR b KQkq - 1 6",
                 Cp(-50), "c8g4", Cp(420))
 
-    def test_not_puzzle_8(self):
+    def test_not_puzzle_8(self) -> None:
         self.not_puzzle("r1bq1rk1/pp1nbppp/4p3/3pP3/8/1P1B4/PBP2PPP/RN1Q1RK1 w - - 1 11", 
                 Cp(-40), "d3h7", Cp(380))
 
-    def test_not_puzzle_9(self):
+    def test_not_puzzle_9(self) -> None:
         self.not_puzzle("5k2/5ppp/2r1p3/1p6/1b1R4/p1n1P1P1/B4PKP/1N6 w - - 2 34", 
                 Cp(0), "b1c3", Cp(520))
 
-    def test_not_puzzle_10(self):
+    def test_not_puzzle_10(self) -> None:
         self.not_puzzle("2Qr3k/p2P2p1/2p1n3/4n1p1/8/4q1P1/PP2P2P/R4R1K w - - 0 33",
                 Cp(100), "c8d8", Cp(500))
 
@@ -154,7 +154,7 @@ class TestGenerator(unittest.TestCase):
 
 
     def assert_is_puzzle_with_moves(self, puzzle: Union[Puzzle, Score], moves: List[Move]) -> None:
-        self.assertIsInstance(puzzle, generator.Puzzle)
+        self.assertIsInstance(puzzle, Puzzle)
         if isinstance(puzzle, Puzzle):
             self.assertEqual(puzzle.moves, moves)
 

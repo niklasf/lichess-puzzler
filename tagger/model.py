@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import chess
-from chess.pgn import Game, Mainline
+from chess.pgn import Game, ChildNode
 from chess import Move, Color
 from typing import List, Optional, Tuple, Literal, Union
 
@@ -44,9 +44,9 @@ TagKind = Literal[
 class Puzzle:
     id: str
     game: Game
-    pov : Color = field(init=False)
-    mainline : Mainline = field(init=False)
+    pov: Color = field(init=False)
+    mainline: List[ChildNode] = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.pov = not self.game.turn()
         self.mainline = list(self.game.mainline())

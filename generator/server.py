@@ -45,12 +45,12 @@ class Server:
         return "{}/seen?token={}&id={}".format(self.url, self.token, id)
 
     def post(self, game_id: str, puzzle: Puzzle) -> None:
-        parent : GameNode = puzzle.node.parent
+        parent: GameNode = puzzle.node.parent
         json = {
             'game_id': game_id,
             'fen': parent.board().fen(),
             'ply': parent.ply(),
-            'moves': [puzzle.node.uci()] + list(map(lambda m : m.uci(), puzzle.moves)),
+            'moves': [puzzle.node.uci()] + [m.uci() for m in puzzle.moves],
             'kind': puzzle.kind,
             'generator_version': self.version,
         }
